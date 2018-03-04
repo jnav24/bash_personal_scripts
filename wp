@@ -1,0 +1,53 @@
+# Univeral
+# NOTE: must have wget installed: brew install wget
+
+# Will do the following for WordPress
+#     Download the latest version
+#     Unzip 
+#     delete zip file
+#     move files to desired location
+#     resave wp-config
+
+DIR=$(pwd)
+DATABASE="wordpress"
+USERNAME="root"
+PASSWORD=""
+PREFIX="jn_"
+WPDIR="wordpress"
+optspec=":name:db:user:pass:prefix"
+
+wget http://wordpress.org/latest.zip
+unzip latest.zip -d ./
+rm latest.zip
+
+while getopts "$optspec" optchar; do
+	case $optchar in
+		name)
+			WPDIR="$OPTARG"
+			mv wordpress/ "$OPTARG"
+			;;
+		db)
+			DATABASE="$OPTARG"
+			;;
+		user)
+			USERNAME="$OPTARG"
+			;;
+		pass)
+			PASSWORD="$OPTARG"
+			;;
+		prefix)
+			PREFIX="$OPTARG"
+			;;			
+		*)
+			echo "Usage : $0 [-a <option>]"
+	esac
+done
+shift "$((OPTIND-1))"
+
+cd $WPDIR
+mv ./wp-config-sample.php ./wp-config.php
+sed -i "s/database_name_here l/$DATABASE l/" ./wp-config.php
+sed -i "s/username_here l/$USERNAME l/" ./wp-config.php
+sed -i "s/password_here l/$PASSWORD l/" ./wp-config.php
+sed -i "s/wp_ l/$PREFIX l/" ./wp-config.php
+cd $DIR

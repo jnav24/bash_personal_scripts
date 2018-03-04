@@ -1,0 +1,6 @@
+# Ubuntu
+
+# Sometimes the clock disapears from the top bar 
+# and this is the fix for that
+
+pkill -f datetime

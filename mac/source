@@ -1,0 +1,5 @@
+#!/bin/bash
+
+BASEDIR="$HOME/bin"
+source "$BASEDIR/aliases"
+source "$BASEDIR/colors"
