@@ -1,5 +1,14 @@
 #!/bin/bash
 
 BASEDIR="$HOME/bin"
-source "$BASEDIR/aliases"
-source "$BASEDIR/colors"
+
+declare -a arr=("aliases" "colors")
+
+for i in "${arr[@]}"
+do
+	if [ -f "$BASEDIR/$i" ]; then
+		source "$BASEDIR/$i"
+	else
+		echo "The file '$BASEDIR/$i' does not exist"
+	fi
+done

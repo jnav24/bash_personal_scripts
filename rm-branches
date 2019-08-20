@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Universal
+# Deletes all local branches that were merged and deleted remotely
+
+BASEDIR=$(pwd)
+DIRPATH="$HOME/git/$1"
+
+if [[ -n $1 ]]; then
+	if [ -d "$DIRPATH" ]; then
+		cd $DIRPATH
+		# git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+		git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d
+		cd $BASEDIR
+	else
+		echo "Directory $DIRPATH does not exist"
+		exit 1
+	fi
+else
+	echo "You must specify a path to a repo"
+	exit 1
+fi
+
