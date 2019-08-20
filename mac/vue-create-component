@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Vue Create Component
+#
+# This creates a Vue component for a Typescript
+# This copies $HOME/bin/vue-template contents which contains a ts, vue, and scss files
+
+DELIMITER="/"
+DIRPATH=`pwd`
+PROJECTPATH=$1
+TEMPLATENAME="template"
+
+if [[ -n $1 ]]; then
+	# Split the args into a list
+	set -f	
+	PATHLIST=(${PROJECTPATH//$DELIMITER/ })
+	LEN=${#PATHLIST[@]}
+	
+	# Name of new component path
+	PATHNAME=${PATHLIST[$LEN-1]}
+
+	# Same as PATHNAME but the first letter uppercase
+	COMPONENT="$(tr '[:lower:]' '[:upper:]' <<< ${PATHNAME:0:1})${PATHNAME:1}"
+
+	# Create directories that do not exist
+	for INT in "${!PATHLIST[@]}"; do
+		if [ ! -d "$DIRPATH/${PATHLIST[$INT]}" ]; then
+			mkdir "$DIRPATH/${PATHLIST[$INT]}"
+		fi
+
+		DIRPATH=$DIRPATH/${PATHLIST[$INT]}
+	done
+
+	cp -a $HOME/bin/vue-template/. $DIRPATH/
+
+	mv $DIRPATH/$TEMPLATENAME.scss $DIRPATH/$PATHNAME.scss
+	mv $DIRPATH/$TEMPLATENAME.ts $DIRPATH/$PATHNAME.ts
+	mv $DIRPATH/$TEMPLATENAME.vue $DIRPATH/$COMPONENT.vue
+
+	sed -i "" "s/{{${TEMPLATENAME}}}/${PATHNAME}/g" $DIRPATH/$PATHNAME.scss
+	sed -i "" "s/{{${TEMPLATENAME}}}/${PATHNAME}/g" $DIRPATH/$COMPONENT.vue
+	sed -i "" "s/{{${TEMPLATENAME}}}/${COMPONENT}/g" $DIRPATH/$PATHNAME.ts
+else
+	echo "Must provide a component name"
+fi
