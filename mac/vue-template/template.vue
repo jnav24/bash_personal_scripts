@@ -1,4 +1,4 @@
-<script scr="./{{template}}.ts" lang="ts"></script>
+<script src="./{{template}}.ts" lang="ts"></script>
 <style src="./{{template}}.scss" lang="scss" scoped></style>
 
 <template>
