@@ -19,8 +19,15 @@ if [[ -n $1 ]]; then
 	# Name of new component path
 	PATHNAME=${PATHLIST[$LEN-1]}
 
-	# Same as PATHNAME but the first letter uppercase
-	COMPONENT="$(tr '[:lower:]' '[:upper:]' <<< ${PATHNAME:0:1})${PATHNAME:1}"
+	# Split the pathname with delimiter of hyphen
+	# Loop through list and make the first letter uppercase
+	# concat the result of each to the COMPONENT variable
+	COMPONENTLIST=(${PATHNAME//-/ })
+	COMPONENT=""
+
+	for INC in "${!COMPONENTLIST[@]}"; do
+	    COMPONENT="${COMPONENT}$(tr '[:lower:]' '[:upper:]' <<< ${COMPONENTLIST[$INC]:0:1})${COMPONENTLIST[$INC]:1}"
+	done
 
 	# Create directories that do not exist
 	for INT in "${!PATHLIST[@]}"; do
