@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Vue Create State
+#
+# This creates a Vuex Store in Typescript
+# This copies $HOME/bin/vuex-template contents which contains all the necessary separated store files
+
+DELIMITER="/"
+DIRPATH=`pwd`
+PROJECTPATH=$1
+FILENAME=""
+CLASSNAME=""
+
+if [[ -n $1 ]]; then
+	# Split the args into a list
+	set -f
+	PATHLIST=(${PROJECTPATH//$DELIMITER/ })
+	LEN=${#PATHLIST[@]}
+
+	# Name of new component path
+	FILENAME=${PATHLIST[$LEN-1]}
+
+	# Split the filename with delimiter of hyphen
+	# Loop through list and make the first letter uppercase
+	# concat the result of each to the COMPONENT variable
+	FILENAMELIST=(${FILENAME//-/ })
+
+	for INC in "${!FILENAMELIST[@]}"; do
+	    CLASSNAME="${CLASSNAME}$(tr '[:lower:]' '[:upper:]' <<< ${FILENAMELIST[$INC]:0:1})${FILENAMELIST[$INC]:1}"
+	done
+
+	STORE=("stores" "states" "getters" "mutations" "actions" "interfaces")
+    STOREPATH="$DIRPATH/src/store/modules"
+
+	# Create directories that do not exist
+	for INT in "${!STORE[@]}"; do
+	    PATHNAME=${STORE[$INT]:0:${#STORE[$INT]}-1}
+
+	    if [ ! -d "$STOREPATH/${STORE[$INT]}" ]; then
+            mkdir "$STOREPATH/${STORE[$INT]}"
+        fi
+
+        cp $HOME/bin/vuex-template/template.$PATHNAME.ts $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
+        sed -i "" "s/{{CLASSNAME}}/${CLASSNAME}/g" $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
+        sed -i "" "s/{{FILENAME}}/${FILENAME}/g" $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
+    done
+else
+	echo "Must provide a store name"
+fi
