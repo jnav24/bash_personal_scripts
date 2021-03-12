@@ -40,6 +40,8 @@ if [[ -n $1 ]]; then
             mkdir "$STOREPATH/${STORE[$INT]}"
         fi
 
+        # if ${STORE[$INT] === 'interfaces', $FILENAME should be $FILENAME-state
+
         cp $HOME/bin/vuex-template/template.$PATHNAME.ts $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
         sed -i "" "s/{{CLASSNAME}}/${CLASSNAME}/g" $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
         sed -i "" "s/{{FILENAME}}/${FILENAME}/g" $STOREPATH/${STORE[$INT]}/$FILENAME.$PATHNAME.ts
